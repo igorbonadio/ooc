@@ -2,12 +2,31 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct AnimalVirtualTable;
+
 typedef struct {
+  struct AnimalVirtualTable* vtable;
   char* name;
 } Animal;
 
+typedef struct AnimalVirtualTable {
+  void (* print)(Animal* animal);
+} AnimalVirtualTable;
+
+void _animalPrint(Animal* animal) {
+  printf("Animal:\n");
+  printf("  name: %s\n", animal->name);
+}
+
+AnimalVirtualTable* animalVirtualTable() {
+  AnimalVirtualTable* vtable = malloc(sizeof(AnimalVirtualTable));
+  vtable->print = _animalPrint;
+  return vtable;
+}
+
 void animalInit(Animal* animal, char* name) {
   animal->name = malloc(strlen(name)*sizeof(char));
+  animal->vtable = animalVirtualTable();
   strcpy(animal->name, name);
 }
 
@@ -17,18 +36,21 @@ Animal* animalNew(char* name) {
   return animal;
 }
 
-void animalPrint(Animal* animal) {
-  printf("Animal:\n");
-  printf("  name: %s\n", animal->name);
-}
-
 typedef struct {
   Animal base;
   int tail;
 } Dog;
 
+void _dogPrint(Animal* animal) {
+  Dog* dog = (Dog*)animal;
+  printf("Dog:\n");
+  printf("  name: %s\n", dog->base.name);
+  printf("  tail: %d\n", dog->tail);
+}
+
 void dogInit(Dog* dog, char* name, int tail) {
   animalInit(&dog->base, name);
+  dog->base.vtable->print = _dogPrint;
   dog->tail = tail;
 }
 
@@ -39,9 +61,7 @@ Dog* dogNew(char* name, int tail) {
 }
 
 void dogPrint(Dog* dog) {
-  printf("Dog:\n");
-  printf("  name: %s\n", dog->base.name);
-  printf("  tail: %d\n", dog->tail);
+  dog->base.vtable->print((Animal*)dog);
 }
 
 typedef struct {
@@ -61,19 +81,15 @@ Fish* fishNew(char* name, int swim) {
 }
 
 void fishPrint(Fish* fish) {
-  printf("Fish:\n");
-  printf("  name: %s\n", fish->base.name);
-  printf("  swim: %d\n", fish->swim);
+  fish->base.vtable->print((Animal*)fish);
 }
 
 int main () {
   Dog* poodle = dogNew("Spike", 1);
   dogPrint(poodle);
-  animalPrint((Animal*)poodle);
 
   Fish* guppy = fishNew("Linguado", 3);
   fishPrint(guppy);
-  animalPrint((Animal*)guppy);
 
   free(poodle);
   free(guppy);
