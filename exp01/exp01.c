@@ -18,6 +18,10 @@ void _animalPrint(Animal* animal) {
   printf("  name: %s\n", animal->name);
 }
 
+void animalPrint(Animal* animal) {
+  animal->vtable->print(animal);
+}
+
 AnimalVirtualTable* animalVirtualTable() {
   AnimalVirtualTable* vtable = malloc(sizeof(AnimalVirtualTable));
   vtable->print = _animalPrint;
@@ -84,12 +88,19 @@ void fishPrint(Fish* fish) {
   fish->base.vtable->print((Animal*)fish);
 }
 
+void print(Animal* animal) {
+  printf("*********************\n");
+  animalPrint(animal);
+}
+
 int main () {
   Dog* poodle = dogNew("Spike", 1);
-  dogPrint(poodle);
+  print((Animal*)poodle);
 
   Fish* guppy = fishNew("Linguado", 3);
-  fishPrint(guppy);
+  print((Animal*)guppy);
+
+  printf("*********************\n");
 
   free(poodle);
   free(guppy);
