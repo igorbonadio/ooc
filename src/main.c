@@ -4,17 +4,17 @@
 #include "dog.h"
 #include "fish.h"
 
-void print(Animal* animal) {
+void print(void* animal) {
   printf("*********************\n");
-  animalPrint(animal);
+  animalPrint((Animal*)animal);
 }
 
 int main () {
   Dog* poodle = dogNew("Spike", 1);
-  print((Animal*)poodle);
+  print(poodle);
 
   Fish* guppy = fishNew("Linguado", 3);
-  print((Animal*)guppy);
+  print(guppy);
 
   printf("*********************\n");
 

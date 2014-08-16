@@ -12,7 +12,7 @@ Fish* fishNew(char* name, int swim);
 
 void fishInit(Fish* fish, char* name, int swim);
 
-void fishPrint(Fish* fish);
+void fishPrint(void* fish);
 
 void fishDestroy(Fish* fish);
 

@@ -7,14 +7,14 @@ typedef struct Animal {
 } Animal;
 
 typedef struct AnimalVirtualTable {
-  void (* print)(Animal* animal);
+  void (* print)(void* animal);
 } AnimalVirtualTable;
 
 Animal* animalNew(char* name);
 
 void animalInit(Animal* animal, char* name);
 
-void animalPrint(Animal* animal);
+void animalPrint(void* animal);
 
 void animalDestroy(Animal* animal);
 

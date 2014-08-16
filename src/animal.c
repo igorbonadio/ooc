@@ -4,13 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-void _animalPrint(Animal* animal) {
+void _animalPrint(void* animal) {
   printf("Animal:\n");
-  printf("  name: %s\n", animal->name);
+  printf("  name: %s\n", ((Animal*)animal)->name);
 }
 
-void animalPrint(Animal* animal) {
-  animal->vtable->print(animal);
+void animalPrint(void* animal) {
+  ((Animal*)animal)->vtable->print(animal);
 }
 
 AnimalVirtualTable* animalVirtualTable() {

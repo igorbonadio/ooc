@@ -15,8 +15,8 @@ Fish* fishNew(char* name, int swim) {
   return fish;
 }
 
-void fishPrint(Fish* fish) {
-  fish->base.vtable->print((Animal*)fish);
+void fishPrint(void* fish) {
+  ((Fish*)fish)->base.vtable->print((Animal*)fish);
 }
 
 void fishDestroy(Fish* fish) {

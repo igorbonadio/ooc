@@ -12,7 +12,7 @@ Dog* dogNew(char* name, int tail);
 
 void dogInit(Dog* dog, char* name, int tail);
 
-void dogPrint(Dog* dog);
+void dogPrint(void* dog);
 
 void dogDestroy(Dog* dog);
 
