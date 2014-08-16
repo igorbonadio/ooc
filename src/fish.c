@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "animal_virtual_table.h"
-
 void fishInit(Fish* fish, char* name, int swim) {
   animalInit(&fish->base, name);
   fish->swim = 3;

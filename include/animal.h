@@ -6,6 +6,10 @@ typedef struct Animal {
   char* name;
 } Animal;
 
+typedef struct AnimalVirtualTable {
+  void (* print)(Animal* animal);
+} AnimalVirtualTable;
+
 Animal* animalNew(char* name);
 
 void animalInit(Animal* animal, char* name);

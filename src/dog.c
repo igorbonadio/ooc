@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "animal_virtual_table.h"
-
 void _dogPrint(Animal* animal) {
   Dog* dog = (Dog*)animal;
   printf("Dog:\n");

@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "animal_virtual_table.h"
-
 void _animalPrint(Animal* animal) {
   printf("Animal:\n");
   printf("  name: %s\n", animal->name);
