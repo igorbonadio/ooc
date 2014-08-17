@@ -8,10 +8,11 @@ struct Object {
 };
 
 struct ObjectKlass {
+  const char* name;
   size_t size;
   void* (* constructor) (void* self, va_list* app);
   void* (* destructor) (void* self);
-  void (* say) (void* self);
+  void (* representation) (void* self);
 };
 
 void* object_constructor(void* self, va_list* app) {
@@ -22,15 +23,16 @@ void* object_destructor(void* self) {
   return self;
 }
 
-void object_say(void* self) {
-  printf("hi!\n");
+void object_representation(void* self) {
+  printf("%s\n", ((struct Object*)self)->klass->name);
 }
 
 static const struct ObjectKlass _Object = {
+  "Object",
   sizeof(struct Object),
   object_constructor,
   object_destructor,
-  object_say
+  object_representation
 };
 
 const struct ObjectKlass* Object = &_Object;
@@ -49,10 +51,11 @@ struct String {
 };
 
 struct StringKlass {
+  const char* name;
   size_t size;
   void* (* constructor) (void* self, va_list* app);
   void* (* destructor) (void* self);
-  void (* say) (void* self);
+  void (* representation) (void* self);
   void (* print) (void* self);
 };
 
@@ -61,8 +64,9 @@ void string_print(void* _self) {
   printf("%s\n", self->text);
 }
 
-void string_say(void* _self) {
-  string_print(_self);
+void string_representation(void* _self) {
+  struct String* self = _self;
+  printf("%s: %s\n", self->klass->name, self->text);
 }
 
 void* string_constructor(void* _self, va_list* app) {
@@ -80,10 +84,11 @@ void* string_destructor(void* _self) {
 }
 
 static const struct StringKlass _String = {
+  "String",
   sizeof(struct String),
   string_constructor,
   string_destructor,
-  string_say,
+  string_representation,
   string_print
 };
 
@@ -103,10 +108,11 @@ struct Integer {
 };
 
 struct IntegerKlass {
+  const char* name;
   size_t size;
   void* (* constructor) (void* self, va_list* app);
   void* (* destructor) (void* self);
-  void (* say) (void* self);
+  void (* representation) (void* self);
   void (* print) (void* self);
 };
 
@@ -122,10 +128,11 @@ void* integer_constructor(void* _self, va_list* app) {
 }
 
 static const struct IntegerKlass _Integer = {
+  "Integer",
   sizeof(struct Integer),
   integer_constructor,
   object_destructor,
-  object_say,
+  object_representation,
   integer_print
 };
 
@@ -153,8 +160,8 @@ void delete(void* self) {
   free(self);
 }
 
-void say(void* obj) {
-  ((struct Object*)obj)->klass->say(obj);
+void representation(void* obj) {
+  ((struct Object*)obj)->klass->representation(obj);
 }
 
 void print(void* obj) {
@@ -166,14 +173,14 @@ int main () {
 
   printf("*********** Explicit Calls ***********\n");
   str->klass->print(str);
-  str->klass->say(str);
+  str->klass->representation(str);
   i->klass->print(i);
-  i->klass->say(str);
+  i->klass->representation(i);
   printf("**************************************\n");
 
   printf("********* Polymorphic Calls **********\n");
-  say(str);
-  say(i);
+  representation(str);
+  representation(i);
   printf("**************************************\n");
 
   printf("********** Interface Calls ***********\n");
