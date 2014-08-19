@@ -121,12 +121,54 @@ static const struct StringKlass _String = {
 
 const struct StringKlass* String = &_String;
 
+void string_printer_print(void* self) {
+  ((struct String*)self)->klass->print(self);
+}
+
 static const struct PrinterInterface _StringPrinter = {
   "Printer",
-  string_print
+  string_printer_print
 };
 
 const struct PrinterInterface* StringPrinter = &_StringPrinter;
+
+/*********************** Atom **********************/
+/*
+ * class Atom extends String
+ *   void print();
+ * }
+ *
+ */
+
+struct Atom {
+  const struct AtomKlass *klass;
+  char* text;
+};
+
+struct AtomKlass {
+  const char* name;
+  size_t size;
+  void* (* constructor) (void* self, va_list* app);
+  void* (* destructor) (void* self);
+  void (* representation) (void* self);
+  void (* print) (void* self);
+};
+
+void atom_print(void* _self) {
+  struct Atom* self = _self;
+  printf(":%s\n", self->text);
+}
+
+static const struct AtomKlass _Atom = {
+  "Atom",
+  sizeof(struct Atom),
+  string_constructor,
+  string_destructor,
+  string_representation,
+  atom_print
+};
+
+const struct AtomKlass* Atom = &_Atom;
 
 /********************** Integer ********************/
 /*
@@ -170,11 +212,15 @@ static const struct IntegerKlass _Integer = {
   integer_print
 };
 
+void integer_printer_print(void* self) {
+  ((struct Integer*)self)->klass->print(self);
+}
+
 const struct IntegerKlass* Integer = &_Integer;
 
 static const struct PrinterInterface _IntegerPrinter = {
   "Printer",
-  integer_print
+  integer_printer_print
 };
 
 const struct PrinterInterface* IntegerPrinter = &_IntegerPrinter;
@@ -212,22 +258,27 @@ void print(void* obj, const void* interface) {
 int main () {
   struct String* str = new(String, "Bye");
   struct Integer* i = new(Integer, 321);
+  struct Atom* atom = new(Atom, "test");
 
   printf("*********** Explicit Calls ***********\n");
   str->klass->print(str);
   str->klass->representation(str);
   i->klass->print(i);
   i->klass->representation(i);
+  atom->klass->print(atom);
+  atom->klass->representation(atom);
   printf("**************************************\n");
 
   printf("********* Polymorphic Calls **********\n");
   representation(str);
   representation(i);
+  representation(atom);
   printf("**************************************\n");
 
   printf("********** Interface Calls ***********\n");
   print(str, StringPrinter);
   print(i, IntegerPrinter);
+  print(atom, StringPrinter);
   printf("**************************************\n");
 
   delete(str);
