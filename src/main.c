@@ -3,6 +3,9 @@
 #include <string.h>
 #include <stdarg.h>
 
+void* new(const void* _klass, ...);
+void delete(void* self);
+
 struct Object {
   const struct ObjectKlass *klass;
 };
@@ -36,6 +39,30 @@ static const struct ObjectKlass _Object = {
 };
 
 const struct ObjectKlass* Object = &_Object;
+
+struct ObjectInterface {
+  const char* name;
+};
+
+static const struct ObjectInterface _ObjectInterface = {
+  "ObjectInterface"
+};
+
+const struct ObjectInterface* ObjectInterface = &_ObjectInterface;
+
+/********************** Printer ********************/
+/*
+ * interface Printer
+ *   void print();
+ * }
+ *
+ */
+
+struct PrinterInterface {
+  const char* name;
+  void (* print) (void* self);
+};
+
 
 /********************** String *********************/
 /*
@@ -94,6 +121,13 @@ static const struct StringKlass _String = {
 
 const struct StringKlass* String = &_String;
 
+static const struct PrinterInterface _StringPrinter = {
+  "Printer",
+  string_print
+};
+
+const struct PrinterInterface* StringPrinter = &_StringPrinter;
+
 /********************** Integer ********************/
 /*
  * class Integer extends Object implements Printer {
@@ -138,6 +172,13 @@ static const struct IntegerKlass _Integer = {
 
 const struct IntegerKlass* Integer = &_Integer;
 
+static const struct PrinterInterface _IntegerPrinter = {
+  "Printer",
+  integer_print
+};
+
+const struct PrinterInterface* IntegerPrinter = &_IntegerPrinter;
+
 /*********************** Main **********************/
 
 void* new(const void* _klass, ...) {
@@ -164,7 +205,8 @@ void representation(void* obj) {
   ((struct Object*)obj)->klass->representation(obj);
 }
 
-void print(void* obj) {
+void print(void* obj, const void* interface) {
+  ((struct PrinterInterface*)interface)->print(obj);
 }
 
 int main () {
@@ -184,8 +226,8 @@ int main () {
   printf("**************************************\n");
 
   printf("********** Interface Calls ***********\n");
-  print(str);
-  print(i);
+  print(str, StringPrinter);
+  print(i, IntegerPrinter);
   printf("**************************************\n");
 
   delete(str);

@@ -8,6 +8,7 @@
 # VERSION  := # Version. Default is '1.0'
 
 # Program settings
+BIN := ooc
 # BIN      := # Binaries' names. If a subdir of the source
 #             # directories has the same name of this bin,
 #             # this dir and all subdir will be compiled

@@ -31,10 +31,10 @@ VERSION  := 1.0
 
 # Package info
 AUXFILES        :=
-MAINTEINER_NAME := Ígor Bonadio
-MAINTEINER_MAIL := igorbonadio@gmail.com
-SYNOPSIS        := Object Oriented C
-DESCRIPTION     := Object Oriented C
+MAINTEINER_NAME := Your Name
+MAINTEINER_MAIL := your_mail@mail.com
+SYNOPSIS        := default short synopsis
+DESCRIPTION     := default long description
 
 # Debian package
 DEB_VERSION     := 1
@@ -42,7 +42,7 @@ DEB_PROJECT     := Default
 DEB_PRIORITY    := optional
 
 # Program settings
-BIN      := ooc
+BIN      :=
 SBIN     :=
 LIBEXEC  :=
 ARLIB    :=
@@ -61,7 +61,7 @@ DOXYFILE := Doxyfile
 ASFLAGS   := -f elf32
 
 # C Options
-CFLAGS    := -Wall -pedantic -O2 -g
+CFLAGS    := -Wall -ansi -pedantic -O2 -g
 
 # C++ Options
 CXXFLAGS  := $(CFLAGS) -std=c++11
@@ -1045,7 +1045,7 @@ debdep := $(sort $(strip $(addprefix $(debdir)/,$(debdep))))
 ########################################################################
 
 .PHONY: all
-all: $(binall)
+all: $(binall) $(liball)
 
 .PHONY: package
 package: package-tar.gz
@@ -2225,8 +2225,10 @@ endif
 ## ERROR ###############################################################
 ifndef MORE
     define ERROR
-    # 2>&1 | sed '1 i error' | sed 's/^/> /' | sed ''/"> error"/s//`printf "${ERR}"`/''
+    # 2>&1 | sed '1 i\ error' | sed 's/^/> /'
     endef
+    #| sed ''/"> error"/s//`printf "${ERR}"`/'' # Adds gray color when
+    #                                           # connected to above
 else
     define ERROR
     2>&1 | more
