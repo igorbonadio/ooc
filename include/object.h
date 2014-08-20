@@ -16,16 +16,16 @@ struct ObjectKlass {
   size_t size;
   void* (* constructor) (void* self, va_list* app);
   void* (* destructor) (void* self);
-  void* (* clone) (void* self);
-  int (* equals) (void* self, void* obj);
-  char* (* to_string) (void* self);
+  void* (* clone) (const void* self);
+  int (* equals) (const void* self, const void* obj);
+  const char* (* to_string) (const void* self);
 };
 
 void* object_constructor(void* self, va_list* app);
 void* object_destructor(void* self);
-void* object_clone(void* self);
-int object_equals(void* self, void* obj);
-char* object_to_string(void* self);
+void* object_clone(const void* self);
+int object_equals(const void* self, const void* obj);
+const char* object_to_string(const void* self);
 
 const struct ObjectKlass* Object; /* Type Object */
 
@@ -37,14 +37,13 @@ struct Klass {
   size_t size;
   void* (* constructor) (void* self, va_list* app);
   void* (* destructor) (void* self);
-  void* (* clone) (void* self);
-  int (* equals) (void* self, void* obj);
-  char* (* to_string) (void* self);
+  void* (* clone) (const void* self);
+  int (* equals) (const void* self, const void* obj);
+  const char* (* to_string) (const void* self);
 };
 
 void* klass_destructor(void* self);
-int klass_equals(void* self, void* obj);
-char* klass_to_string(void* self);
+const char* klass_to_string(const void* self);
 
 const struct Klass* Klass; /* Type Klass */
 
