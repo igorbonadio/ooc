@@ -22,7 +22,7 @@ int main () {
 
   printf("string representation of Object class -> %s\n", obj->klass->klass->to_string(obj->klass));
 
-  delete(obj);
+  printf("empty interface                       -> %s\n", Interface->name);
 
   return 0;
 }

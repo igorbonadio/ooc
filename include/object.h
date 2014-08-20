@@ -47,4 +47,12 @@ const char* klass_to_string(const void* self);
 
 const struct Klass* Klass; /* Type Klass */
 
+/*********************** Interface ***********************/
+
+struct Interface {
+  const char* name;
+};
+
+const struct Interface* Interface;
+
 #endif

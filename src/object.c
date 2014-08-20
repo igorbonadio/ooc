@@ -71,3 +71,9 @@ static const struct ObjectKlass _Object = {
 };
 
 const struct ObjectKlass* Object = &_Object;
+
+static const struct Interface _Interface = {
+  "Interface"
+};
+
+const struct Interface* Interface = &_Interface;
