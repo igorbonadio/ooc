@@ -61,7 +61,7 @@ DOXYFILE := Doxyfile
 ASFLAGS   := -f elf32
 
 # C Options
-CFLAGS    := -Wall -ansi -pedantic -O2 -g
+CFLAGS    := -Wall -pedantic -O2 -g
 
 # C++ Options
 CXXFLAGS  := $(CFLAGS) -std=c++11
